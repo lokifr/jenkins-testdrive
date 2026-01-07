@@ -11,9 +11,8 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Building.."
-                sh '''
-                cd myapp
-                pip install -r requirements.txt
+               sh '''
+                echo "Nothing to build for now"
                 '''
             }
         }
