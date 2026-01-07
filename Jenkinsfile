@@ -1,31 +1,29 @@
 pipeline {
-    agent { 
-        node {
-            label 'docker-agent-python'
-            }
-      }
+    agent { label 'docker-agent-python' }
+
     triggers {
-        pollSCM '* * * * *'
+        pollSCM('* * * * *')
     }
+
     stages {
         stage('Build') {
             steps {
                 echo "Building.."
-               sh '''
+                sh '''
                 echo "Nothing to build for now"
                 '''
             }
         }
+
         stage('Test') {
             steps {
                 echo "Testing.."
                 sh '''
-                cd myapp
-                python3 hello.py
-                python3 hello.py --name=Brad
+                python3 helloworld.py
                 '''
             }
         }
+
         stage('Deliver') {
             steps {
                 echo 'Deliver....'
