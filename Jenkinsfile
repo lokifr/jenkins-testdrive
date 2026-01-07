@@ -6,31 +6,59 @@ pipeline {
     }
 
     stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
         stage('Build') {
             steps {
-                echo "Building.."
-                sh '''
-                echo "Nothing to build for now"
-                '''
+                script {
+                    docker.image('python:3.10-slim').inside {
+                        sh '''
+                        echo "Build stage"
+                        python --version
+                        '''
+                    }
+                }
             }
         }
 
         stage('Test') {
             steps {
-                echo "Testing.."
-                sh '''
-                python3 helloworld.py
-                '''
+                script {
+                    docker.image('python:3.10-slim').inside {
+                        sh '''
+                        echo "Test stage"
+                        python helloworld.py
+                        '''
+                    }
+                }
             }
         }
 
         stage('Deliver') {
             steps {
-                echo 'Deliver....'
-                sh '''
-                echo "doing delivery stuff.."
-                '''
+                script {
+                    docker.image('python:3.10-slim').inside {
+                        sh '''
+                        echo "Deliver stage"
+                        echo "Deploy logic goes here"
+                        '''
+                    }
+                }
             }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully'
+        }
+        failure {
+            echo 'Pipeline failed'
         }
     }
 }
