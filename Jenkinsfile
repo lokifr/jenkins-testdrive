@@ -1,64 +1,34 @@
 pipeline {
-    agent { label 'docker-agent-python' }
+    agent {
+        docker {
+            image 'python:3.10-slim'
+        }
+    }
 
     triggers {
         pollSCM('* * * * *')
     }
 
     stages {
-
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
         stage('Build') {
             steps {
-                script {
-                    docker.image('python:3.10-slim').inside {
-                        sh '''
-                        echo "Build stage"
-                        python --version
-                        '''
-                    }
-                }
+                echo 'Build stage'
+                sh 'python --version'
             }
         }
 
         stage('Test') {
             steps {
-                script {
-                    docker.image('python:3.10-slim').inside {
-                        sh '''
-                        echo "Test stage"
-                        python helloworld.py
-                        '''
-                    }
-                }
+                echo 'Test stage'
+                sh 'python helloworld.py'
             }
         }
 
         stage('Deliver') {
             steps {
-                script {
-                    docker.image('python:3.10-slim').inside {
-                        sh '''
-                        echo "Deliver stage"
-                        echo "Deploy logic goes here"
-                        '''
-                    }
-                }
+                echo 'Deliver stage'
+                sh 'echo delivery done'
             }
-        }
-    }
-
-    post {
-        success {
-            echo 'Pipeline completed successfully'
-        }
-        failure {
-            echo 'Pipeline failed'
         }
     }
 }
